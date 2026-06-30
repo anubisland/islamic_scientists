@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>علماء المسلمين وإسهاماتهم العلمية</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231ca7a8'/%3E%3Ccircle cx='32' cy='32' r='18' fill='%23f6bd3f'/%3E%3Cpath d='M16 34h32M32 16v32M21 21l22 22M43 21 21 43' stroke='%23fffaf0' stroke-width='4'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <img class="hero__image" src="assets/hero-islamic-science.png" alt="" />
+      <div class="hero__overlay"></div>
+      <nav class="topbar" aria-label="Primary">
+        <strong>مَوْسُوعَةُ العُلَمَاءِ</strong>
+        <div class="topbar__actions">
+          <button class="icon-button" id="toggleLang" type="button" title="Toggle language">ع / En</button>
+          <button class="icon-button" id="stopNarration" type="button" title="Stop narration">■</button>
+        </div>
+      </nav>
+      <section class="hero__content">
+        <p class="eyebrow">Islamic Scientific Legacy</p>
+        <h1>عُلَمَاءُ المُسْلِمِينَ وَأَثَرُهُمْ فِي العِلْمِ الحَدِيثِ</h1>
+        <p class="hero__copy ar-text">
+          مَشْرُوعٌ تَوْثِيقِيٌّ يُعِيدُ قِرَاءَةَ جُهُودِ عُلَمَاءِ الحَضَارَةِ الإِسْلَامِيَّةِ فِي الرِّيَاضِيَّاتِ، وَالطِّبِّ، وَالفَلَكِ، وَالهَنْدَسَةِ، وَالكِيمْيَاءِ، وَغَيْرِهَا، وَيَرْبِطُهَا بِمَا وَصَلَ إِلَيْهِ العَالَمُ مِنْ تَقَدُّمٍ تِكْنُولُوجِيٍّ.
+        </p>
+        <p class="hero__copy en-text">
+          A bilingual documentation project tracing how Muslim scholars advanced mathematics, medicine, astronomy, engineering, chemistry, and other sciences that helped shape modern technology.
+        </p>
+        <div class="hero__stats">
+          <span><b id="fieldCount">0</b> مجال</span>
+          <span><b id="scientistCount">0</b> عالم فريد</span>
+          <span>راوٍ صوتي</span>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="intro-band">
+        <div>
+          <p class="section-kicker">التصنيف العلمي</p>
+          <h2>اختر مجالًا، ثم افتح بطاقة العالم المرتبط به.</h2>
+        </div>
+        <p>
+          الواجهة تعرض العربية المشكّلة للراوي، وبجوارها النص الإنجليزي. يمكن تشغيل القراءة الصوتية لأي محور أو للمجال كاملًا من أزرار الاستماع.
+        </p>
+      </section>
+
+      <section class="controls" aria-label="Filters">
+        <label class="search">
+          <span>بحث</span>
+          <input id="searchBox" type="search" placeholder="ابحث باسم عالم أو مجال..." />
+        </label>
+        <div class="chips" id="categoryChips"></div>
+      </section>
+
+      <section class="layout">
+        <aside class="field-list" id="fieldList" aria-label="Scientific fields"></aside>
+        <section class="detail" id="detailPanel" aria-live="polite"></section>
+      </section>
+    </main>
+
+    <script src="scripts/data.js"></script>
+    <script src="scripts/app.js"></script>
+  </body>
+</html>
