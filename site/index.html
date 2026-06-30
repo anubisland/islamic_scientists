@@ -8,22 +8,6 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <section class="start-overlay" id="startOverlay" aria-label="مقدمة المشروع">
-      <div class="start-card">
-        <div class="start-copy">
-          <p class="section-kicker">بِدَايَةُ الرِّحْلَةِ</p>
-          <h2>مَوْسُوعَةُ العُلَمَاءِ المُسْلِمِينَ</h2>
-          <p>
-            هَذَا المَشْرُوعُ يُوَثِّقُ جُهُودَ العُلَمَاءِ المُسْلِمِينَ وَإِسْهَامَاتِهِمْ فِي الرِّيَاضِيَّاتِ،
-            وَالطِّبِّ، وَالفَلَكِ، وَالهَنْدَسَةِ، وَالكِيمْيَاءِ، وَالجُغْرَافِيَا، وَالعُلُومِ التَّجْرِيبِيَّةِ.
-            وَتَظْهَرُ أَهَمِّيَّتُهُ فِي رَبْطِ تِلْكَ الجُهُودِ بِمَا وَصَلَ إِلَيْهِ العَالَمُ اليَوْمَ مِنْ
-            تَقَدُّمٍ عِلْمِيٍّ وَتِكْنُولُوجِيٍّ.
-          </p>
-        </div>
-        <button class="start-button" id="startIntroAudio" type="button">استماع للمقدمة</button>
-      </div>
-    </section>
-
     <header class="hero">
       <img class="hero__image" src="assets/hero-islamic-science.png" alt="" />
       <div class="hero__overlay"></div>
@@ -67,10 +51,13 @@
           <h2>اختر مجالًا رئيسيًا، ثم افتح المجالات الفرعية، ثم اقرأ بطاقة العالم كاملة.</h2>
           <span class="intro-band__en">Choose a main field, open its related subfields, then read the full scholar card.</span>
         </div>
-        <p>
-          تظهر النصوص العربية والإنجليزية معًا في كل مجال، بينما يقرأ الراوي اللغة المختارة في بداية العرض فقط: العربية عند اختيار النطق العربي، أو الإنجليزية عند اختيار الصوت الإنجليزي.
-          <span class="intro-band__en">Arabic and English texts appear together in every field. The narrator reads only the selected language: Arabic for Arabic narration, or English for the English voice.</span>
-        </p>
+        <div class="intro-band__copy">
+          <p>
+            تظهر النصوص العربية والإنجليزية معًا في كل مجال، بينما يقرأ الراوي اللغة المختارة في بداية العرض فقط: العربية عند اختيار النطق العربي، أو الإنجليزية عند اختيار الصوت الإنجليزي.
+            <span class="intro-band__en">Arabic and English texts appear together in every field. The narrator reads only the selected language: Arabic for Arabic narration, or English for the English voice.</span>
+          </p>
+          <button class="intro-audio-button" id="startIntroAudio" type="button">استماع للمقدمة</button>
+        </div>
       </section>
 
       <section class="view-toolbar" aria-label="Navigation">

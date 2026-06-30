@@ -37,45 +37,7 @@ body {
   display: none !important;
 }
 
-.start-overlay {
-  display: block;
-  padding: clamp(18px, 4vw, 42px);
-  background:
-    linear-gradient(135deg, rgba(255, 253, 246, 0.88), rgba(217, 248, 233, 0.86)),
-    url("assets/hero-islamic-science.png") center / cover;
-}
-
-.start-card {
-  width: min(1080px, 100%);
-  margin: 0 auto;
-  padding: clamp(20px, 3vw, 34px);
-  border-radius: 8px;
-  background: rgba(255, 253, 246, 0.93);
-  border: 1px solid rgba(8, 104, 79, 0.2);
-  box-shadow: 0 22px 70px rgba(23, 34, 31, 0.22);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(16px, 3vw, 30px);
-  align-items: center;
-}
-
-.start-card h2 {
-  margin: 0;
-  font-size: clamp(1.6rem, 4vw, 2.8rem);
-  line-height: 1.25;
-}
-
-.start-card p {
-  color: var(--ink-2);
-  line-height: 1.8;
-  margin-block-end: 0;
-}
-
-.start-copy {
-  min-width: 0;
-}
-
-.start-button,
+.intro-audio-button,
 .back-button {
   min-height: 44px;
   border: 1px solid var(--emerald);
@@ -87,7 +49,8 @@ body {
   cursor: pointer;
 }
 
-.start-button {
+.intro-audio-button {
+  align-self: start;
   min-width: 150px;
   white-space: nowrap;
 }
@@ -357,6 +320,13 @@ main {
   margin: 0;
   line-height: 1.85;
   color: var(--ink-2);
+}
+
+.intro-band__copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: start;
 }
 
 .intro-band__en {
@@ -858,11 +828,11 @@ body.is-paused .audio-wave span { animation-play-state: paused; }
 }
 
 @media (max-width: 620px) {
-  .start-card {
+  .intro-band__copy {
     grid-template-columns: 1fr;
   }
 
-  .start-button {
+  .intro-audio-button {
     width: 100%;
   }
 
