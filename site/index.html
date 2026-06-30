@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="start-overlay" id="startOverlay">
+      <div class="start-card">
+        <p class="section-kicker">بِدَايَةُ الرِّحْلَةِ</p>
+        <h2>مَوْسُوعَةُ العُلَمَاءِ المُسْلِمِينَ</h2>
+        <p>
+          اضغط للبدء؛ سيقدّم الراوي تعريفًا موجزًا بأهمية المشروع، ثم تظهر المجالات الرئيسية.
+        </p>
+        <button class="start-button" id="startApp" type="button">ابدأ واستمع إلى المقدمة</button>
+      </div>
+    </div>
+
     <header class="hero">
       <img class="hero__image" src="assets/hero-islamic-science.png" alt="" />
       <div class="hero__overlay"></div>
@@ -42,25 +53,33 @@
       <section class="intro-band">
         <div>
           <p class="section-kicker">التصنيف العلمي</p>
-          <h2>اختر مجالًا، ثم افتح بطاقة العالم المرتبط به.</h2>
+          <h2>اختر مجالًا رئيسيًا، ثم افتح المجالات الفرعية، ثم اقرأ بطاقة العالم كاملة.</h2>
         </div>
         <p>
           تظهر النصوص العربية والإنجليزية معًا في كل مجال، بينما يقرأ الراوي اللغة المختارة في بداية العرض فقط: العربية عند اختيار النطق العربي، أو الإنجليزية عند اختيار الصوت الإنجليزي.
         </p>
       </section>
 
-      <section class="controls" aria-label="Filters">
+      <section class="view-toolbar" aria-label="Navigation">
+        <button class="back-button" id="backButton" type="button" hidden>عودة</button>
+        <div class="breadcrumb" id="breadcrumb">المجالات الرئيسية</div>
+      </section>
+
+      <section class="controls" id="searchControls" aria-label="Search" hidden>
         <label class="search">
           <span>بحث</span>
           <input id="searchBox" type="search" placeholder="ابحث باسم عالم أو مجال..." />
         </label>
-        <div class="chips" id="categoryChips"></div>
       </section>
 
-      <section class="layout">
-        <aside class="field-list" id="fieldList" aria-label="Scientific fields"></aside>
-        <section class="detail" id="detailPanel" aria-live="polite"></section>
+      <section class="main-categories" id="categoryGrid" aria-label="Main scientific fields"></section>
+
+      <section class="subfields" id="subfieldScreen" hidden>
+        <div class="subfield-head" id="subfieldHead"></div>
+        <div class="field-list field-grid" id="fieldList" aria-label="Scientific subfields"></div>
       </section>
+
+      <section class="detail" id="detailPanel" aria-live="polite" hidden></section>
     </main>
 
     <script src="scripts/data.js"></script>

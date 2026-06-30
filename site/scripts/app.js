@@ -1,47 +1,129 @@
 const data = window.ISLAMIC_SCIENCE_DATA;
 
 const categories = [
-  { id: "all", ar: "كُلُّ المَجَالَاتِ", en: "All Fields" },
-  { id: "mathematics", ar: "الرِّيَاضِيَّاتُ", en: "Mathematics" },
-  { id: "astronomy", ar: "الفَلَكُ", en: "Astronomy" },
-  { id: "medicine", ar: "الطِّبُّ وَالصَّيْدَلَةُ", en: "Medicine" },
-  { id: "science", ar: "الفِيزْيَاءُ وَالعُلُومُ التَّجْرِيبِيَّةُ", en: "Physics & Experimental Science" },
-  { id: "engineering", ar: "الهَنْدَسَةُ وَالآلَاتُ", en: "Engineering" },
-  { id: "natural", ar: "العُلُومُ الطَّبِيعِيَّةُ", en: "Natural Sciences" },
-  { id: "earth", ar: "الأَرْضُ وَالمِلَاحَةُ", en: "Earth & Navigation" },
-  { id: "humanities", ar: "الفِكْرُ وَالمُجْتَمَعُ", en: "Thought & Society" },
+  {
+    id: "all",
+    ar: "كُلُّ المَجَالَاتِ",
+    en: "All Fields",
+    descAr: "استعراض كامل للمجالات العلمية والرواد المرتبطين بها.",
+    descEn: "A complete view of all scientific fields and their scholars.",
+  },
+  {
+    id: "mathematics",
+    ar: "الرِّيَاضِيَّاتُ",
+    en: "Mathematics",
+    descAr: "الجبر والحساب والهندسة العددية والطرق الخوارزمية.",
+    descEn: "Algebra, arithmetic, numerical geometry, and algorithmic methods.",
+  },
+  {
+    id: "astronomy",
+    ar: "الفَلَكُ",
+    en: "Astronomy",
+    descAr: "الرصد والزيجات والآلات الفلكية وحساب الأزمنة.",
+    descEn: "Observation, astronomical tables, instruments, and timekeeping.",
+  },
+  {
+    id: "medicine",
+    ar: "الطِّبُّ وَالصَّيْدَلَةُ",
+    en: "Medicine",
+    descAr: "الطب السريري والجراحة والصيدلة والتشخيص.",
+    descEn: "Clinical medicine, surgery, pharmacy, and diagnosis.",
+  },
+  {
+    id: "science",
+    ar: "الفِيزْيَاءُ وَالعُلُومُ التَّجْرِيبِيَّةُ",
+    en: "Physics & Experimental Science",
+    descAr: "البصريات والحركة والمنهج التجريبي ودراسة الظواهر.",
+    descEn: "Optics, motion, experimental method, and natural phenomena.",
+  },
+  {
+    id: "engineering",
+    ar: "الهَنْدَسَةُ وَالآلَاتُ",
+    en: "Engineering",
+    descAr: "الحيل الميكانيكية والعمارة والري والابتكار التطبيقي.",
+    descEn: "Machines, architecture, irrigation, and applied invention.",
+  },
+  {
+    id: "natural",
+    ar: "العُلُومُ الطَّبِيعِيَّةُ",
+    en: "Natural Sciences",
+    descAr: "النبات والحيوان والمعادن والكيمياء والبيئة.",
+    descEn: "Botany, zoology, minerals, chemistry, and ecology.",
+  },
+  {
+    id: "earth",
+    ar: "الأَرْضُ وَالمِلَاحَةُ",
+    en: "Earth & Navigation",
+    descAr: "الجغرافيا والخرائط والملاحة وقياس الأرض.",
+    descEn: "Geography, maps, navigation, and geodesy.",
+  },
+  {
+    id: "humanities",
+    ar: "الفِكْرُ وَالمُجْتَمَعُ",
+    en: "Thought & Society",
+    descAr: "المعرفة واللغة والاجتماع وأثر العلم في العمران.",
+    descEn: "Knowledge, language, society, and civilization.",
+  },
 ];
 
 const STORAGE = {
   narrator: "islamicScientists.narratorLanguage",
+  introPlayed: "islamicScientists.introPlayed",
 };
 
-let activeCategory = "all";
-let activeField = data.fields[0]?.id || "";
+let currentView = "categories";
+let activeCategory = "";
+let activeField = "";
 let query = "";
 let narratorLanguage = localStorage.getItem(STORAGE.narrator) || "ar";
 let narrationQueue = [];
-let narrationPaused = false;
 
+const categoryGrid = document.querySelector("#categoryGrid");
+const subfieldScreen = document.querySelector("#subfieldScreen");
+const subfieldHead = document.querySelector("#subfieldHead");
 const fieldList = document.querySelector("#fieldList");
 const detailPanel = document.querySelector("#detailPanel");
-const categoryChips = document.querySelector("#categoryChips");
+const searchControls = document.querySelector("#searchControls");
 const searchBox = document.querySelector("#searchBox");
+const backButton = document.querySelector("#backButton");
+const breadcrumb = document.querySelector("#breadcrumb");
 const stopNarration = document.querySelector("#stopNarration");
 const narratorButtons = document.querySelectorAll("[data-narrator-lang]");
+const startOverlay = document.querySelector("#startOverlay");
+const startApp = document.querySelector("#startApp");
 
 document.querySelector("#fieldCount").textContent = data.stats.fields;
 document.querySelector("#scientistCount").textContent = data.stats.uniqueScientists;
 
 function narratorMeta() {
   return narratorLanguage === "ar"
-    ? { code: "ar-SA", label: "العربية", button: "الراوي: عربي" }
-    : { code: "en-US", label: "English", button: "Narrator: English" };
+    ? {
+        code: "ar-SA",
+        button: "الراوي: عربي",
+        listen: "استمع",
+        listenFull: "استماع للمجال كاملًا",
+        pause: "إيقاف مؤقت / متابعة",
+        back: "عودة",
+      }
+    : {
+        code: "en-US",
+        button: "Narrator: English",
+        listen: "Listen",
+        listenFull: "Listen to full field",
+        pause: "Pause / Resume",
+        back: "Back",
+      };
+}
+
+function projectIntroText() {
+  if (narratorLanguage === "en") {
+    return "This project documents the scientific legacy of Muslim scholars and connects their discoveries in mathematics, medicine, astronomy, engineering, chemistry, geography, and experimental science to the modern world. It is designed as a bilingual archive that helps readers see how knowledge moved from observation and experiment to tools, institutions, and technologies we still use today.";
+  }
+  return "هَذَا المَشْرُوعُ يُوَثِّقُ جُهُودَ العُلَمَاءِ المُسْلِمِينَ وَإِسْهَامَاتِهِمْ فِي الرِّيَاضِيَّاتِ، وَالطِّبِّ، وَالفَلَكِ، وَالهَنْدَسَةِ، وَالكِيمْيَاءِ، وَالجُغْرَافِيَا، وَالعُلُومِ التَّجْرِيبِيَّةِ. وَتَظْهَرُ أَهَمِّيَّتُهُ فِي رَبْطِ تِلْكَ الجُهُودِ بِمَا وَصَلَ إِلَيْهِ العَالَمُ اليَوْمَ مِنْ تَقَدُّمٍ عِلْمِيٍّ وَتِكْنُولُوجِيٍّ.";
 }
 
 function stopSpeech() {
   narrationQueue = [];
-  narrationPaused = false;
   document.body.classList.remove("is-speaking", "is-paused");
   if ("speechSynthesis" in window) window.speechSynthesis.cancel();
 }
@@ -51,7 +133,7 @@ function setNarratorLanguage(language) {
   localStorage.setItem(STORAGE.narrator, narratorLanguage);
   stopSpeech();
   updateNarratorButtons();
-  renderDetail();
+  render();
 }
 
 function updateNarratorButtons() {
@@ -83,38 +165,52 @@ function displayParts(value) {
   };
 }
 
-function filteredFields() {
-  return data.fields.filter((field) => {
-    const inCategory = activeCategory === "all" || field.category === activeCategory;
+function categoryFields(categoryId = activeCategory) {
+  const selected = categoryId === "all" ? data.fields : data.fields.filter((field) => field.category === categoryId);
+  const q = normalize(query);
+  if (!q) return selected;
+  return selected.filter((field) => {
     const haystack = normalize(`${field.title} ${field.scientist} ${field.sections.map((s) => `${s.title} ${s.ar} ${s.en}`).join(" ")}`);
-    return inCategory && haystack.includes(normalize(query));
+    return haystack.includes(q);
   });
 }
 
-function renderCategories() {
-  categoryChips.innerHTML = categories
+function categoryCount(categoryId) {
+  return categoryId === "all" ? data.fields.length : data.fields.filter((field) => field.category === categoryId).length;
+}
+
+function renderCategoryGrid() {
+  categoryGrid.innerHTML = categories
     .map((category) => {
-      const active = category.id === activeCategory ? " is-active" : "";
-      return `<button class="chip${active}" type="button" data-category="${category.id}">
-        <span>${category.ar}</span><small>${category.en}</small>
-      </button>`;
+      const count = categoryCount(category.id);
+      return `
+        <button class="category-card" type="button" data-category="${category.id}">
+          <span class="category-count">${count}</span>
+          <span class="category-title">${category.ar}</span>
+          <span class="category-title-en">${category.en}</span>
+          <span class="category-desc">${category.descAr}</span>
+        </button>
+      `;
     })
     .join("");
 }
 
-function renderList() {
-  const fields = filteredFields();
-  if (!fields.some((field) => field.id === activeField)) {
-    activeField = fields[0]?.id || "";
-  }
+function renderSubfields() {
+  const category = categories.find((item) => item.id === activeCategory) || categories[0];
+  const fields = categoryFields();
+  subfieldHead.innerHTML = `
+    <p class="section-kicker">المجالات الفرعية</p>
+    <h2>${category.ar}</h2>
+    <span>${category.en}</span>
+    <p>${category.descAr}</p>
+  `;
 
   fieldList.innerHTML = fields
     .map((field) => {
       const title = displayParts(field.title);
       const scientist = displayParts(field.scientist);
-      const active = field.id === activeField ? " is-active" : "";
       return `
-        <button class="field-button${active}" type="button" data-field="${field.id}">
+        <button class="field-button" type="button" data-field="${field.id}">
           <span class="field-number">${String(field.sourceIndex).padStart(2, "0")}</span>
           <span class="field-card-copy">
             <span class="field-title">${title.ar}</span>
@@ -125,6 +221,10 @@ function renderList() {
       `;
     })
     .join("");
+
+  if (!fields.length) {
+    fieldList.innerHTML = `<div class="empty">لا توجد نتائج مطابقة.</div>`;
+  }
 }
 
 function getPreferredVoice(language) {
@@ -199,13 +299,11 @@ function pauseOrResumeSpeech() {
   if (!("speechSynthesis" in window)) return;
   if (speechSynthesis.speaking && !speechSynthesis.paused) {
     speechSynthesis.pause();
-    narrationPaused = true;
     document.body.classList.add("is-paused");
     return;
   }
   if (speechSynthesis.paused) {
     speechSynthesis.resume();
-    narrationPaused = false;
     document.body.classList.remove("is-paused");
   }
 }
@@ -262,9 +360,9 @@ function renderDetail() {
 
       <div class="narrator-panel">
         <button class="listen primary" type="button" data-speak-field="${field.id}">
-          <span>استماع للمجال كاملًا</span><small>${meta.button}</small>
+          <span>${meta.listenFull}</span><small>${meta.button}</small>
         </button>
-        <button class="listen secondary" type="button" data-pause>إيقاف مؤقت / متابعة</button>
+        <button class="listen secondary" type="button" data-pause>${meta.pause}</button>
         <div class="audio-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
       </div>
 
@@ -284,7 +382,7 @@ function renderDetail() {
                     <h3>${sectionTitle.ar}</h3>
                     <span>${sectionTitle.en}</span>
                   </div>
-                  <button class="listen" type="button" data-speak-section="${index}">استمع</button>
+                  <button class="listen" type="button" data-speak-section="${index}">${meta.listen}</button>
                 </div>
                 <div class="columns">
                   <div class="text-panel ar-text">
@@ -305,24 +403,45 @@ function renderDetail() {
   `;
 }
 
-function render() {
-  renderCategories();
-  renderList();
-  renderDetail();
+function setView(view) {
+  currentView = view;
+  categoryGrid.hidden = view !== "categories";
+  subfieldScreen.hidden = view !== "fields";
+  detailPanel.hidden = view !== "detail";
+  searchControls.hidden = view === "categories";
+  backButton.hidden = view === "categories";
+  backButton.textContent = narratorMeta().back;
+
+  const category = categories.find((item) => item.id === activeCategory);
+  if (view === "categories") breadcrumb.textContent = "المجالات الرئيسية";
+  if (view === "fields") breadcrumb.textContent = category ? `${category.ar} · ${category.en}` : "المجالات الفرعية";
+  if (view === "detail") breadcrumb.textContent = "تفاصيل المجال";
 }
 
-categoryChips.addEventListener("click", (event) => {
+function render() {
+  renderCategoryGrid();
+  if (currentView === "fields") renderSubfields();
+  if (currentView === "detail") renderDetail();
+  setView(currentView);
+}
+
+categoryGrid.addEventListener("click", (event) => {
   const button = event.target.closest("[data-category]");
   if (!button) return;
   activeCategory = button.dataset.category;
-  render();
+  query = "";
+  searchBox.value = "";
+  renderSubfields();
+  setView("fields");
+  subfieldScreen.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
 fieldList.addEventListener("click", (event) => {
   const button = event.target.closest("[data-field]");
   if (!button) return;
   activeField = button.dataset.field;
-  render();
+  renderDetail();
+  setView("detail");
   detailPanel.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
@@ -335,8 +454,7 @@ detailPanel.addEventListener("click", (event) => {
     return;
   }
 
-  const fieldButton = event.target.closest("[data-speak-field]");
-  if (fieldButton) {
+  if (event.target.closest("[data-speak-field]")) {
     speak(field.sections.map(sectionText).join("\n\n"));
     return;
   }
@@ -348,13 +466,32 @@ detailPanel.addEventListener("click", (event) => {
   }
 });
 
+backButton.addEventListener("click", () => {
+  stopSpeech();
+  if (currentView === "detail") {
+    renderSubfields();
+    setView("fields");
+    subfieldScreen.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+  setView("categories");
+  categoryGrid.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
 searchBox.addEventListener("input", (event) => {
   query = event.target.value;
-  render();
+  if (currentView === "fields") renderSubfields();
 });
 
 narratorButtons.forEach((button) => {
   button.addEventListener("click", () => setNarratorLanguage(button.dataset.narratorLang));
+});
+
+startApp.addEventListener("click", () => {
+  startOverlay.hidden = true;
+  localStorage.setItem(STORAGE.introPlayed, "1");
+  speak(projectIntroText());
+  categoryGrid.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
 stopNarration.addEventListener("click", stopSpeech);
