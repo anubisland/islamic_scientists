@@ -1,0 +1,46 @@
+{
+  "rate": "-8%",
+  "slots": {
+    "classic": {
+      "ar": "ar-SA-HamedNeural",
+      "en": "en-US-GuyNeural",
+      "labelAr": "حامد",
+      "labelEn": "Hamed",
+      "descAr": "صوت فصيح",
+      "descEn": "Classic male"
+    },
+    "gentle": {
+      "ar": "ar-SA-ZariyahNeural",
+      "en": "en-US-AriaNeural",
+      "labelAr": "زارية",
+      "labelEn": "Zariyah",
+      "descAr": "صوت هادئ",
+      "descEn": "Gentle female"
+    },
+    "story": {
+      "ar": "ar-EG-SalmaNeural",
+      "en": "en-US-JennyNeural",
+      "labelAr": "سلمى",
+      "labelEn": "Salma",
+      "descAr": "حكواتية",
+      "descEn": "Storyteller female"
+    },
+    "warm": {
+      "ar": "ar-OM-AbdullahNeural",
+      "en": "en-GB-RyanNeural",
+      "labelAr": "عبدالله",
+      "labelEn": "Ryan",
+      "descAr": "صوت ودود",
+      "descEn": "Warm male"
+    },
+    "shakir": {
+      "ar": "ar-EG-ShakirNeural",
+      "en": "en-US-BrianNeural",
+      "labelAr": "شاكر",
+      "labelEn": "Brian",
+      "descAr": "صوت مصري",
+      "descEn": "Egyptian male"
+    }
+  },
+  "fields": 73
+}

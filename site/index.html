@@ -8,19 +8,21 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="start-overlay" id="startOverlay">
+    <section class="start-overlay" id="startOverlay" aria-label="مقدمة المشروع">
       <div class="start-card">
-        <p class="section-kicker">بِدَايَةُ الرِّحْلَةِ</p>
-        <h2>مَوْسُوعَةُ العُلَمَاءِ المُسْلِمِينَ</h2>
-        <p>
-          اختر هل تريد سماع مقدمة قصيرة عن أهمية المشروع، أو الدخول مباشرة إلى المجالات الرئيسية.
-        </p>
-        <div class="start-actions">
-          <button class="start-button" id="startWithIntro" type="button">ابدأ مع قراءة المقدمة</button>
-          <button class="start-button start-button--quiet" id="startWithoutIntro" type="button">ابدأ بدون قراءة</button>
+        <div class="start-copy">
+          <p class="section-kicker">بِدَايَةُ الرِّحْلَةِ</p>
+          <h2>مَوْسُوعَةُ العُلَمَاءِ المُسْلِمِينَ</h2>
+          <p>
+            هَذَا المَشْرُوعُ يُوَثِّقُ جُهُودَ العُلَمَاءِ المُسْلِمِينَ وَإِسْهَامَاتِهِمْ فِي الرِّيَاضِيَّاتِ،
+            وَالطِّبِّ، وَالفَلَكِ، وَالهَنْدَسَةِ، وَالكِيمْيَاءِ، وَالجُغْرَافِيَا، وَالعُلُومِ التَّجْرِيبِيَّةِ.
+            وَتَظْهَرُ أَهَمِّيَّتُهُ فِي رَبْطِ تِلْكَ الجُهُودِ بِمَا وَصَلَ إِلَيْهِ العَالَمُ اليَوْمَ مِنْ
+            تَقَدُّمٍ عِلْمِيٍّ وَتِكْنُولُوجِيٍّ.
+          </p>
         </div>
+        <button class="start-button" id="startIntroAudio" type="button">استماع للمقدمة</button>
       </div>
-    </div>
+    </section>
 
     <header class="hero">
       <img class="hero__image" src="assets/hero-islamic-science.png" alt="" />
@@ -31,6 +33,12 @@
           <div class="narrator-toggle" aria-label="Narrator language">
             <button class="narrator-option" type="button" data-narrator-lang="ar" aria-pressed="true">نُطْقٌ عَرَبِيّ</button>
             <button class="narrator-option" type="button" data-narrator-lang="en" aria-pressed="false">English Voice</button>
+          </div>
+          <div class="voice-pick">
+            <button class="voice-button" id="voiceButton" type="button" aria-haspopup="true" aria-expanded="false" title="اختيار صوت الراوي">
+              <span>🎙</span><span id="voiceCurrent">عبدالله</span>
+            </button>
+            <div class="voice-menu" id="voiceMenu" role="menu" hidden></div>
           </div>
           <button class="icon-button" id="stopNarration" type="button" title="Stop narration">■</button>
         </div>
@@ -57,15 +65,16 @@
         <div>
           <p class="section-kicker">التصنيف العلمي</p>
           <h2>اختر مجالًا رئيسيًا، ثم افتح المجالات الفرعية، ثم اقرأ بطاقة العالم كاملة.</h2>
+          <span class="intro-band__en">Choose a main field, open its related subfields, then read the full scholar card.</span>
         </div>
         <p>
           تظهر النصوص العربية والإنجليزية معًا في كل مجال، بينما يقرأ الراوي اللغة المختارة في بداية العرض فقط: العربية عند اختيار النطق العربي، أو الإنجليزية عند اختيار الصوت الإنجليزي.
+          <span class="intro-band__en">Arabic and English texts appear together in every field. The narrator reads only the selected language: Arabic for Arabic narration, or English for the English voice.</span>
         </p>
       </section>
 
       <section class="view-toolbar" aria-label="Navigation">
         <button class="back-button" id="backButton" type="button" hidden>عودة</button>
-        <div class="breadcrumb" id="breadcrumb">المجالات الرئيسية</div>
       </section>
 
       <section class="controls" id="searchControls" aria-label="Search" hidden>

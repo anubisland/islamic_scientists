@@ -68,7 +68,15 @@ const categories = [
 
 const STORAGE = {
   narrator: "islamicScientists.narratorLanguage",
-  introPlayed: "islamicScientists.introPlayed",
+  voice: "islamicScientists.voiceSlot",
+};
+
+const VOICE_SLOTS = {
+  classic: { labelAr: "حامد", labelEn: "Hamed", descAr: "صوت فصيح", descEn: "Classic male" },
+  gentle: { labelAr: "زارية", labelEn: "Zariyah", descAr: "صوت هادئ", descEn: "Gentle female" },
+  story: { labelAr: "سلمى", labelEn: "Salma", descAr: "حكواتية", descEn: "Storyteller female" },
+  warm: { labelAr: "عبدالله", labelEn: "Ryan", descAr: "صوت ودود", descEn: "Warm male" },
+  shakir: { labelAr: "شاكر", labelEn: "Brian", descAr: "صوت مصري", descEn: "Egyptian male" },
 };
 
 let currentView = "categories";
@@ -76,7 +84,10 @@ let activeCategory = "";
 let activeField = "";
 let query = "";
 let narratorLanguage = localStorage.getItem(STORAGE.narrator) || "ar";
+let narratorVoice = VOICE_SLOTS[localStorage.getItem(STORAGE.voice)] ? localStorage.getItem(STORAGE.voice) : "warm";
 let narrationQueue = [];
+let currentAudio = null;
+let playToken = 0;
 
 const categoryGrid = document.querySelector("#categoryGrid");
 const subfieldScreen = document.querySelector("#subfieldScreen");
@@ -86,12 +97,12 @@ const detailPanel = document.querySelector("#detailPanel");
 const searchControls = document.querySelector("#searchControls");
 const searchBox = document.querySelector("#searchBox");
 const backButton = document.querySelector("#backButton");
-const breadcrumb = document.querySelector("#breadcrumb");
 const stopNarration = document.querySelector("#stopNarration");
 const narratorButtons = document.querySelectorAll("[data-narrator-lang]");
-const startOverlay = document.querySelector("#startOverlay");
-const startWithIntro = document.querySelector("#startWithIntro");
-const startWithoutIntro = document.querySelector("#startWithoutIntro");
+const voiceButton = document.querySelector("#voiceButton");
+const voiceCurrent = document.querySelector("#voiceCurrent");
+const voiceMenu = document.querySelector("#voiceMenu");
+const startIntroAudio = document.querySelector("#startIntroAudio");
 
 document.querySelector("#fieldCount").textContent = data.stats.fields;
 document.querySelector("#scientistCount").textContent = data.stats.uniqueScientists;
@@ -99,7 +110,6 @@ document.querySelector("#scientistCount").textContent = data.stats.uniqueScienti
 function narratorMeta() {
   return narratorLanguage === "ar"
     ? {
-        code: "ar-SA",
         button: "الراوي: عربي",
         listen: "استمع",
         listenFull: "استماع للمجال كاملًا",
@@ -107,7 +117,6 @@ function narratorMeta() {
         back: "عودة",
       }
     : {
-        code: "en-US",
         button: "Narrator: English",
         listen: "Listen",
         listenFull: "Listen to full field",
@@ -116,17 +125,16 @@ function narratorMeta() {
       };
 }
 
-function projectIntroText() {
-  if (narratorLanguage === "en") {
-    return "This project documents the scientific legacy of Muslim scholars and connects their discoveries in mathematics, medicine, astronomy, engineering, chemistry, geography, and experimental science to the modern world. It is designed as a bilingual archive that helps readers see how knowledge moved from observation and experiment to tools, institutions, and technologies we still use today.";
-  }
-  return "هَذَا المَشْرُوعُ يُوَثِّقُ جُهُودَ العُلَمَاءِ المُسْلِمِينَ وَإِسْهَامَاتِهِمْ فِي الرِّيَاضِيَّاتِ، وَالطِّبِّ، وَالفَلَكِ، وَالهَنْدَسَةِ، وَالكِيمْيَاءِ، وَالجُغْرَافِيَا، وَالعُلُومِ التَّجْرِيبِيَّةِ. وَتَظْهَرُ أَهَمِّيَّتُهُ فِي رَبْطِ تِلْكَ الجُهُودِ بِمَا وَصَلَ إِلَيْهِ العَالَمُ اليَوْمَ مِنْ تَقَدُّمٍ عِلْمِيٍّ وَتِكْنُولُوجِيٍّ.";
-}
-
 function stopSpeech() {
   narrationQueue = [];
+  playToken += 1;
   document.body.classList.remove("is-speaking", "is-paused");
-  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.removeAttribute("src");
+    currentAudio.load();
+    currentAudio = null;
+  }
 }
 
 function setNarratorLanguage(language) {
@@ -134,6 +142,7 @@ function setNarratorLanguage(language) {
   localStorage.setItem(STORAGE.narrator, narratorLanguage);
   stopSpeech();
   updateNarratorButtons();
+  renderVoiceMenu();
   render();
 }
 
@@ -143,6 +152,36 @@ function updateNarratorButtons() {
     button.classList.toggle("is-active", active);
     button.setAttribute("aria-pressed", String(active));
   });
+}
+
+function voiceLabel(slot = narratorVoice) {
+  const voice = VOICE_SLOTS[slot] || VOICE_SLOTS.warm;
+  return narratorLanguage === "ar" ? voice.labelAr : voice.labelEn;
+}
+
+function renderVoiceMenu() {
+  voiceCurrent.textContent = voiceLabel();
+  voiceMenu.innerHTML = Object.entries(VOICE_SLOTS)
+    .map(([slot, voice]) => {
+      const label = narratorLanguage === "ar" ? voice.labelAr : voice.labelEn;
+      const desc = narratorLanguage === "ar" ? voice.descAr : voice.descEn;
+      return `
+        <button class="voice-option${slot === narratorVoice ? " is-active" : ""}" type="button" data-voice-slot="${slot}" role="menuitem">
+          <span>${label}<small>${desc}</small></span>
+          <strong>${slot === narratorVoice ? "✓" : ""}</strong>
+        </button>
+      `;
+    })
+    .join("");
+}
+
+function setNarratorVoice(slot) {
+  if (!VOICE_SLOTS[slot]) return;
+  narratorVoice = slot;
+  localStorage.setItem(STORAGE.voice, narratorVoice);
+  stopSpeech();
+  renderVoiceMenu();
+  render();
 }
 
 function normalize(value) {
@@ -190,6 +229,7 @@ function renderCategoryGrid() {
           <span class="category-title">${category.ar}</span>
           <span class="category-title-en">${category.en}</span>
           <span class="category-desc">${category.descAr}</span>
+          <span class="category-desc category-desc-en">${category.descEn}</span>
         </button>
       `;
     })
@@ -204,6 +244,7 @@ function renderSubfields() {
     <h2>${category.ar}</h2>
     <span>${category.en}</span>
     <p>${category.descAr}</p>
+    <p class="subfield-head__en" dir="ltr">${category.descEn}</p>
   `;
 
   fieldList.innerHTML = fields
@@ -228,104 +269,78 @@ function renderSubfields() {
   }
 }
 
-function getPreferredVoice(language) {
-  const voices = window.speechSynthesis.getVoices();
-  const prefix = language.split("-")[0];
-  const preferredNames = language.startsWith("ar")
-    ? ["hoda", "naayf", "tarik", "maged", "microsoft", "google"]
-    : ["aria", "guy", "jenny", "ryan", "zira", "david", "google", "microsoft"];
-
-  return voices
-    .filter((voice) => voice.lang && voice.lang.toLowerCase().startsWith(prefix))
-    .sort((a, b) => voiceScore(b, language, preferredNames) - voiceScore(a, language, preferredNames))[0];
+function narrationUrl(fieldId, sectionIndex, language = narratorLanguage) {
+  return `audio/${narratorVoice}/${fieldId}_${sectionIndex}_${language}.mp3`;
 }
 
-function voiceScore(voice, language, preferredNames) {
-  const name = voice.name.toLowerCase();
-  const exact = voice.lang.toLowerCase() === language.toLowerCase() ? 20 : 0;
-  const preferred = preferredNames.findIndex((item) => name.includes(item));
-  return exact + (voice.localService ? 4 : 0) + (preferred === -1 ? 0 : 12 - preferred);
+function introUrl(language = narratorLanguage) {
+  return `audio/${narratorVoice}/intro_${language}.mp3`;
 }
 
-function splitNarration(text) {
-  const cleaned = text.replace(/\s+/g, " ").trim();
-  if (!cleaned) return [];
-  const sentences = cleaned.match(/[^.!؟?؛،]+[.!؟?؛،]?/g) || [cleaned];
-  const chunks = [];
-  let current = "";
-
-  sentences.forEach((sentence) => {
-    if ((current + " " + sentence).trim().length > 240 && current) {
-      chunks.push(current.trim());
-      current = sentence;
-    } else {
-      current = `${current} ${sentence}`.trim();
-    }
-  });
-  if (current) chunks.push(current.trim());
-  return chunks;
+function showAudioNotice() {
+  const message =
+    narratorLanguage === "ar"
+      ? "لم يتم العثور على الملف الصوتي لهذا الاختيار. شغّل: python scripts/gen_tts.py"
+      : "Audio is not generated for this selection yet. Run: python scripts/gen_tts.py";
+  const notice = document.createElement("div");
+  notice.className = "audio-notice";
+  notice.textContent = message;
+  document.body.appendChild(notice);
+  window.setTimeout(() => notice.remove(), 3600);
 }
 
-function speak(text) {
-  if (!("speechSynthesis" in window)) {
-    alert("المتصفح الحالي لا يدعم الراوي الصوتي.");
-    return;
-  }
+function playAudioQueue(urls) {
   stopSpeech();
-  narrationQueue = splitNarration(text);
-  speakNext();
+  narrationQueue = urls.filter(Boolean);
+  const token = ++playToken;
+  playNextAudio(token);
 }
 
-function speakNext() {
+function playNextAudio(token) {
   const next = narrationQueue.shift();
-  if (!next) {
+  if (!next || token !== playToken) {
     document.body.classList.remove("is-speaking", "is-paused");
     return;
   }
 
-  const meta = narratorMeta();
-  const utterance = new SpeechSynthesisUtterance(next);
-  utterance.lang = meta.code;
-  utterance.voice = getPreferredVoice(meta.code) || null;
-  utterance.rate = narratorLanguage === "ar" ? 0.82 : 0.9;
-  utterance.pitch = narratorLanguage === "ar" ? 0.96 : 1;
-  utterance.volume = 1;
-  utterance.onend = () => speakNext();
-  utterance.onerror = () => speakNext();
-  document.body.classList.add("is-speaking");
-  window.speechSynthesis.speak(utterance);
+  currentAudio = new Audio(next);
+  currentAudio.preload = "auto";
+  currentAudio.onended = () => playNextAudio(token);
+  currentAudio.onerror = () => {
+    showAudioNotice();
+    playNextAudio(token);
+  };
+  currentAudio.onplay = () => {
+    document.body.classList.add("is-speaking");
+    document.body.classList.remove("is-paused");
+  };
+  currentAudio.play().catch(() => {
+    showAudioNotice();
+    document.body.classList.remove("is-speaking", "is-paused");
+  });
+}
+
+function playField(field) {
+  playAudioQueue(field.sections.map((_, index) => narrationUrl(field.id, index)));
+}
+
+function playSection(field, sectionIndex) {
+  playAudioQueue([narrationUrl(field.id, sectionIndex)]);
+}
+
+function speakIntro() {
+  playAudioQueue([introUrl()]);
 }
 
 function pauseOrResumeSpeech() {
-  if (!("speechSynthesis" in window)) return;
-  if (speechSynthesis.speaking && !speechSynthesis.paused) {
-    speechSynthesis.pause();
+  if (!currentAudio) return;
+  if (!currentAudio.paused) {
+    currentAudio.pause();
     document.body.classList.add("is-paused");
     return;
   }
-  if (speechSynthesis.paused) {
-    speechSynthesis.resume();
-    document.body.classList.remove("is-paused");
-  }
-}
-
-function prepareArabicNarration(text) {
-  return text
-    .replace(/\([^)]*[A-Za-z][^)]*\)/g, "")
-    .replace(/\b[A-Za-z][A-Za-z\s-]{2,}\b/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function prepareEnglishNarration(text) {
-  return text
-    .replace(/[\u0600-\u06FF]+/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function sectionText(section) {
-  return narratorLanguage === "ar" ? prepareArabicNarration(section.ar) : prepareEnglishNarration(section.en);
+  currentAudio.play();
+  document.body.classList.remove("is-paused");
 }
 
 function renderDetail() {
@@ -361,15 +376,10 @@ function renderDetail() {
 
       <div class="narrator-panel">
         <button class="listen primary" type="button" data-speak-field="${field.id}">
-          <span>${meta.listenFull}</span><small>${meta.button}</small>
+          <span>${meta.listenFull}</span><small>${meta.button} · ${voiceLabel()}</small>
         </button>
         <button class="listen secondary" type="button" data-pause>${meta.pause}</button>
         <div class="audio-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-      </div>
-
-      <div class="innovation-strip">
-        <strong>الابتكار في سياقه العلمي</strong>
-        <p>تعرض كل بطاقة النص العربي المشكّل والنص الإنجليزي معًا، بينما يقرأ الراوي اللغة المختارة فقط دون خلط بين اللغتين.</p>
       </div>
 
       <div class="sections">
@@ -412,11 +422,6 @@ function setView(view) {
   searchControls.hidden = view === "categories";
   backButton.hidden = view === "categories";
   backButton.textContent = narratorMeta().back;
-
-  const category = categories.find((item) => item.id === activeCategory);
-  if (view === "categories") breadcrumb.textContent = "المجالات الرئيسية";
-  if (view === "fields") breadcrumb.textContent = category ? `${category.ar} · ${category.en}` : "المجالات الفرعية";
-  if (view === "detail") breadcrumb.textContent = "تفاصيل المجال";
 }
 
 function render() {
@@ -456,14 +461,13 @@ detailPanel.addEventListener("click", (event) => {
   }
 
   if (event.target.closest("[data-speak-field]")) {
-    speak(field.sections.map(sectionText).join("\n\n"));
+    playField(field);
     return;
   }
 
   const sectionButton = event.target.closest("[data-speak-section]");
   if (sectionButton) {
-    const section = field.sections[Number(sectionButton.dataset.speakSection)];
-    speak(sectionText(section));
+    playSection(field, Number(sectionButton.dataset.speakSection));
   }
 });
 
@@ -488,24 +492,33 @@ narratorButtons.forEach((button) => {
   button.addEventListener("click", () => setNarratorLanguage(button.dataset.narratorLang));
 });
 
-function enterApp({ readIntro = false } = {}) {
-  startOverlay.hidden = true;
-  localStorage.setItem(STORAGE.introPlayed, "1");
-  if (readIntro) speak(projectIntroText());
-  categoryGrid.scrollIntoView({ behavior: "smooth", block: "start" });
-}
+voiceButton.addEventListener("click", () => {
+  const expanded = voiceButton.getAttribute("aria-expanded") === "true";
+  voiceButton.setAttribute("aria-expanded", String(!expanded));
+  voiceMenu.hidden = expanded;
+});
 
-startWithIntro.addEventListener("click", () => enterApp({ readIntro: true }));
-startWithoutIntro.addEventListener("click", () => enterApp({ readIntro: false }));
+voiceMenu.addEventListener("click", (event) => {
+  const option = event.target.closest("[data-voice-slot]");
+  if (!option) return;
+  setNarratorVoice(option.dataset.voiceSlot);
+  voiceButton.setAttribute("aria-expanded", "false");
+  voiceMenu.hidden = true;
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".voice-pick")) return;
+  voiceButton.setAttribute("aria-expanded", "false");
+  voiceMenu.hidden = true;
+});
+
+startIntroAudio.addEventListener("click", speakIntro);
 
 stopNarration.addEventListener("click", stopSpeech);
 window.addEventListener("beforeunload", stopSpeech);
 
-if ("speechSynthesis" in window) {
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-}
-
 document.documentElement.lang = "ar";
 document.documentElement.dir = "rtl";
 updateNarratorButtons();
+renderVoiceMenu();
 render();
