@@ -260,6 +260,14 @@ button:hover {
   letter-spacing: 0;
 }
 
+.section-kicker__en {
+  display: inline-block;
+  margin-inline-start: 8px;
+  color: var(--gold);
+  direction: ltr;
+  text-transform: none;
+}
+
 h1 {
   margin: 0;
   max-width: 930px;

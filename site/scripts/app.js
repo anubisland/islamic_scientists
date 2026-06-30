@@ -90,6 +90,9 @@ let currentAudio = null;
 let playToken = 0;
 
 const categoryGrid = document.querySelector("#categoryGrid");
+const heroScreen = document.querySelector(".hero");
+const introBand = document.querySelector(".intro-band");
+const viewToolbar = document.querySelector(".view-toolbar");
 const subfieldScreen = document.querySelector("#subfieldScreen");
 const subfieldHead = document.querySelector("#subfieldHead");
 const fieldList = document.querySelector("#fieldList");
@@ -416,10 +419,13 @@ function renderDetail() {
 
 function setView(view) {
   currentView = view;
+  heroScreen.hidden = view !== "categories";
+  introBand.hidden = view !== "categories";
   categoryGrid.hidden = view !== "categories";
   subfieldScreen.hidden = view !== "fields";
   detailPanel.hidden = view !== "detail";
-  searchControls.hidden = view === "categories";
+  searchControls.hidden = view !== "fields";
+  viewToolbar.hidden = view === "categories";
   backButton.hidden = view === "categories";
   backButton.textContent = narratorMeta().back;
 }
@@ -439,7 +445,7 @@ categoryGrid.addEventListener("click", (event) => {
   searchBox.value = "";
   renderSubfields();
   setView("fields");
-  subfieldScreen.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
 fieldList.addEventListener("click", (event) => {
@@ -448,7 +454,7 @@ fieldList.addEventListener("click", (event) => {
   activeField = button.dataset.field;
   renderDetail();
   setView("detail");
-  detailPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
 detailPanel.addEventListener("click", (event) => {
@@ -476,11 +482,11 @@ backButton.addEventListener("click", () => {
   if (currentView === "detail") {
     renderSubfields();
     setView("fields");
-    subfieldScreen.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
   setView("categories");
-  categoryGrid.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
 searchBox.addEventListener("input", (event) => {
