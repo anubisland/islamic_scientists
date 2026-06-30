@@ -90,7 +90,8 @@ const breadcrumb = document.querySelector("#breadcrumb");
 const stopNarration = document.querySelector("#stopNarration");
 const narratorButtons = document.querySelectorAll("[data-narrator-lang]");
 const startOverlay = document.querySelector("#startOverlay");
-const startApp = document.querySelector("#startApp");
+const startWithIntro = document.querySelector("#startWithIntro");
+const startWithoutIntro = document.querySelector("#startWithoutIntro");
 
 document.querySelector("#fieldCount").textContent = data.stats.fields;
 document.querySelector("#scientistCount").textContent = data.stats.uniqueScientists;
@@ -487,12 +488,15 @@ narratorButtons.forEach((button) => {
   button.addEventListener("click", () => setNarratorLanguage(button.dataset.narratorLang));
 });
 
-startApp.addEventListener("click", () => {
+function enterApp({ readIntro = false } = {}) {
   startOverlay.hidden = true;
   localStorage.setItem(STORAGE.introPlayed, "1");
-  speak(projectIntroText());
+  if (readIntro) speak(projectIntroText());
   categoryGrid.scrollIntoView({ behavior: "smooth", block: "start" });
-});
+}
+
+startWithIntro.addEventListener("click", () => enterApp({ readIntro: true }));
+startWithoutIntro.addEventListener("click", () => enterApp({ readIntro: false }));
 
 stopNarration.addEventListener("click", stopSpeech);
 window.addEventListener("beforeunload", stopSpeech);
