@@ -50,7 +50,6 @@ body {
 }
 
 .intro-audio-button {
-  align-self: start;
   min-width: 150px;
   white-space: nowrap;
 }
@@ -320,13 +319,6 @@ main {
   margin: 0;
   line-height: 1.85;
   color: var(--ink-2);
-}
-
-.intro-band__copy {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 14px;
-  align-items: start;
 }
 
 .intro-band__en {
@@ -828,10 +820,6 @@ body.is-paused .audio-wave span { animation-play-state: paused; }
 }
 
 @media (max-width: 620px) {
-  .intro-band__copy {
-    grid-template-columns: 1fr;
-  }
-
   .intro-audio-button {
     width: 100%;
   }
