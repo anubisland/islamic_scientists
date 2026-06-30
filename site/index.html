@@ -14,7 +14,10 @@
       <nav class="topbar" aria-label="Primary">
         <strong>مَوْسُوعَةُ العُلَمَاءِ</strong>
         <div class="topbar__actions">
-          <button class="icon-button" id="toggleLang" type="button" title="Toggle language">ع / En</button>
+          <div class="narrator-toggle" aria-label="Narrator language">
+            <button class="narrator-option" type="button" data-narrator-lang="ar" aria-pressed="true">نُطْقٌ عَرَبِيّ</button>
+            <button class="narrator-option" type="button" data-narrator-lang="en" aria-pressed="false">English Voice</button>
+          </div>
           <button class="icon-button" id="stopNarration" type="button" title="Stop narration">■</button>
         </div>
       </nav>
@@ -42,7 +45,7 @@
           <h2>اختر مجالًا، ثم افتح بطاقة العالم المرتبط به.</h2>
         </div>
         <p>
-          الواجهة تعرض العربية المشكّلة للراوي، وبجوارها النص الإنجليزي. يمكن تشغيل القراءة الصوتية لأي محور أو للمجال كاملًا من أزرار الاستماع.
+          تظهر النصوص العربية والإنجليزية معًا في كل مجال، بينما يقرأ الراوي اللغة المختارة في بداية العرض فقط: العربية عند اختيار النطق العربي، أو الإنجليزية عند اختيار الصوت الإنجليزي.
         </p>
       </section>
 
