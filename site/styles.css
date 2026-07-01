@@ -97,7 +97,7 @@ button:hover {
   position: absolute;
   inset: 10% 5%;
   z-index: -1;
-  background: url("assets/hero-islamic-science.png") center / contain no-repeat;
+  background: url("assets/hero-islamic-science.webp") center / contain no-repeat;
   opacity: 0.18;
   filter: saturate(1.15);
 }

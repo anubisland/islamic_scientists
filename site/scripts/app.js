@@ -239,6 +239,24 @@ function renderCategoryGrid() {
     .join("");
 }
 
+function warmImageCache() {
+  const images = [...new Set(data.fields.map((field) => field.image).filter(Boolean))];
+  const loadImages = () => {
+    images.forEach((src, index) => {
+      window.setTimeout(() => {
+        const image = new Image();
+        image.decoding = "async";
+        image.src = src;
+      }, index * 180);
+    });
+  };
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(loadImages, { timeout: 2500 });
+    return;
+  }
+  window.setTimeout(loadImages, 1200);
+}
+
 function renderSubfields() {
   const category = categories.find((item) => item.id === activeCategory) || categories[0];
   const fields = categoryFields();
@@ -374,7 +392,7 @@ function renderDetail() {
           </div>
         </div>
         <figure class="innovation-figure">
-          <img src="${field.image}" alt="صورة توضيحية لابتكارات ${title.ar}" loading="lazy">
+          <img src="${field.image}" alt="صورة توضيحية لابتكارات ${title.ar}" loading="eager" decoding="async">
           <figcaption>${title.en || category.en}</figcaption>
         </figure>
       </header>
@@ -538,3 +556,4 @@ document.documentElement.dir = "rtl";
 updateNarratorButtons();
 renderVoiceMenu();
 render();
+warmImageCache();
