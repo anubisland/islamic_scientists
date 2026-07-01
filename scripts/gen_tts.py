@@ -79,12 +79,19 @@ INTRO = {
         "وَإِسْهَامَاتِهِمْ فِي الرِّيَاضِيَّاتِ، وَالطِّبِّ، وَالفَلَكِ، "
         "وَالهَنْدَسَةِ، وَالكِيمْيَاءِ، وَالجُغْرَافِيَا، وَالعُلُومِ التَّجْرِيبِيَّةِ. "
         "وَتَظْهَرُ أَهَمِّيَّتُهُ فِي رَبْطِ تِلْكَ الجُهُودِ بِمَا وَصَلَ إِلَيْهِ "
-        "العَالَمُ اليَوْمَ مِنْ تَقَدُّمٍ عِلْمِيٍّ وَتِكْنُولُوجِيٍّ."
+        "العَالَمُ اليَوْمَ مِنْ تَقَدُّمٍ عِلْمِيٍّ وَتِكْنُولُوجِيٍّ. "
+        "وَفِي عُصُورٍ كَانَتْ فِيهَا مَنَاطِقُ وَاسِعَةٌ مِنَ العَالَمِ تَمُرُّ "
+        "بِتَرَاجُعٍ فِي مُؤَسَّسَاتِ العِلْمِ وَالمَعْرِفَةِ، كَانَتِ الحَوَاضِرُ "
+        "العَرَبِيَّةُ وَالإِسْلَامِيَّةُ تَزْدَهِرُ بِمَرَاكِزِ التَّرْجَمَةِ "
+        "وَالبَحْثِ وَالتَّجْرِيبِ."
     ),
     "en": (
         "This project documents the scientific legacy of Muslim scholars and connects "
         "their discoveries in mathematics, medicine, astronomy, engineering, chemistry, "
-        "geography, and experimental science to the modern world."
+        "geography, and experimental science to the modern world. At a time when many "
+        "regions were experiencing a decline in formal institutions of learning, Arab "
+        "and Islamic cities flourished as centers of translation, research, experimentation, "
+        "and knowledge."
     ),
 }
 
