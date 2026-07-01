@@ -892,34 +892,110 @@ body.is-paused .audio-wave span { animation-play-state: paused; }
 
 @media (max-width: 620px) {
   .intro-audio-button {
-    width: 100%;
+    width: auto;
   }
 
   .topbar {
     align-items: flex-start;
-    flex-direction: column;
+    flex-direction: row;
+    min-height: auto;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+
+  .topbar strong {
+    max-width: 38%;
+    font-size: 0.82rem;
+    line-height: 1.25;
+  }
+
+  .topbar strong small {
+    font-size: 0.58rem;
   }
 
   .topbar__actions {
-    width: 100%;
+    width: auto;
+    margin-inline-start: auto;
+    justify-content: flex-end;
+    gap: 5px;
+    flex-wrap: wrap;
   }
 
   .narrator-toggle {
-    flex: 1;
+    flex: 0 1 auto;
+    gap: 3px;
+    padding: 3px;
+    border-radius: 8px;
   }
 
   .narrator-option {
-    flex: 1;
+    flex: 0 0 auto;
+    min-height: 30px;
+    padding: 0 8px;
+    font-size: 0.78rem;
+    border-radius: 7px;
+    line-height: 1.15;
   }
 
   .voice-pick,
   .voice-button {
-    flex: 1;
+    flex: 0 0 auto;
+  }
+
+  .voice-button {
+    min-height: 30px;
+    padding: 0 8px;
+    gap: 4px;
+    font-size: 0.78rem;
+    border-radius: 7px;
+  }
+
+  .icon-button {
+    width: 34px;
+    min-height: 34px;
+    font-size: 0.78rem;
   }
 
   .voice-menu {
-    inset-inline: 0 auto;
+    inset-inline: auto 0;
     min-width: min(260px, 92vw);
+  }
+
+  .hero__content {
+    width: min(100% - 28px, 620px);
+    padding-top: 92px;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 10vw, 3.2rem);
+    line-height: 1.08;
+  }
+
+  h1 span {
+    font-size: 0.95rem;
+  }
+
+  .hero__copy {
+    font-size: 0.98rem;
+    line-height: 1.75;
+  }
+
+  .hero__stats {
+    gap: 6px;
+  }
+
+  .hero__stats span,
+  .intro-audio-button {
+    min-height: 36px;
+    padding: 6px 10px;
+    font-size: 0.82rem;
+    border-radius: 7px;
+  }
+
+  .hero__stats small,
+  .intro-audio-button small {
+    font-size: 0.6rem;
+    line-height: 1.1;
   }
 
   .section-head {
