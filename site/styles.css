@@ -37,6 +37,22 @@ body {
   display: none !important;
 }
 
+body.view-fields .hero,
+body.view-fields .intro-band,
+body.view-fields .main-categories,
+body.view-fields .detail,
+body.view-detail .hero,
+body.view-detail .intro-band,
+body.view-detail .main-categories,
+body.view-detail .subfields,
+body.view-detail .controls,
+body.view-categories .view-toolbar,
+body.view-categories .controls,
+body.view-categories .subfields,
+body.view-categories .detail {
+  display: none !important;
+}
+
 .intro-audio-button,
 .back-button {
   min-height: 44px;
@@ -120,6 +136,28 @@ button:hover {
 .topbar strong {
   color: var(--emerald);
   font-weight: 900;
+}
+
+.topbar strong small,
+.hero__stats small,
+.intro-audio-button small,
+.text-panel h4 small,
+.empty span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  direction: ltr;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: none;
+}
+
+.topbar strong small {
+  color: var(--emerald-2);
+}
+
+.intro-audio-button small {
+  color: rgba(255, 255, 255, 0.76);
 }
 
 .topbar__actions,
@@ -276,6 +314,16 @@ h1 {
   letter-spacing: 0;
 }
 
+h1 span {
+  display: block;
+  margin-top: 10px;
+  color: var(--emerald);
+  direction: ltr;
+  font-size: clamp(1rem, 2vw, 1.45rem);
+  font-weight: 900;
+  line-height: 1.25;
+}
+
 .hero__copy {
   max-width: 790px;
   font-size: clamp(1rem, 1.65vw, 1.18rem);
@@ -367,6 +415,14 @@ main {
   gap: 6px;
   color: var(--muted);
   font-size: 0.84rem;
+}
+
+.search small {
+  display: inline-block;
+  margin-inline-start: 6px;
+  direction: ltr;
+  color: var(--emerald);
+  font-weight: 800;
 }
 
 .search input {
@@ -570,6 +626,13 @@ main {
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.45;
+}
+
+.field-scientist-en {
+  direction: ltr;
+  text-align: left;
+  color: var(--emerald);
+  font-weight: 800;
 }
 
 .detail {

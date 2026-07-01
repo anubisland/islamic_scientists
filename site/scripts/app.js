@@ -113,11 +113,11 @@ document.querySelector("#scientistCount").textContent = data.stats.uniqueScienti
 function narratorMeta() {
   return narratorLanguage === "ar"
     ? {
-        button: "الراوي: عربي",
-        listen: "استمع",
-        listenFull: "استماع للمجال كاملًا",
-        pause: "إيقاف مؤقت / متابعة",
-        back: "عودة",
+        button: "الراوي: عربي / Arabic narrator",
+        listen: "استمع / Listen",
+        listenFull: "استماع للمجال كاملًا / Full field audio",
+        pause: "إيقاف مؤقت / متابعة · Pause / Resume",
+        back: "عودة / Back",
       }
     : {
         button: "Narrator: English",
@@ -159,15 +159,15 @@ function updateNarratorButtons() {
 
 function voiceLabel(slot = narratorVoice) {
   const voice = VOICE_SLOTS[slot] || VOICE_SLOTS.warm;
-  return narratorLanguage === "ar" ? voice.labelAr : voice.labelEn;
+  return narratorLanguage === "ar" ? `${voice.labelAr} / ${voice.labelEn}` : voice.labelEn;
 }
 
 function renderVoiceMenu() {
   voiceCurrent.textContent = voiceLabel();
   voiceMenu.innerHTML = Object.entries(VOICE_SLOTS)
     .map(([slot, voice]) => {
-      const label = narratorLanguage === "ar" ? voice.labelAr : voice.labelEn;
-      const desc = narratorLanguage === "ar" ? voice.descAr : voice.descEn;
+      const label = narratorLanguage === "ar" ? `${voice.labelAr} / ${voice.labelEn}` : voice.labelEn;
+      const desc = narratorLanguage === "ar" ? `${voice.descAr} / ${voice.descEn}` : voice.descEn;
       return `
         <button class="voice-option${slot === narratorVoice ? " is-active" : ""}" type="button" data-voice-slot="${slot}" role="menuitem">
           <span>${label}<small>${desc}</small></span>
@@ -243,7 +243,7 @@ function renderSubfields() {
   const category = categories.find((item) => item.id === activeCategory) || categories[0];
   const fields = categoryFields();
   subfieldHead.innerHTML = `
-    <p class="section-kicker">المجالات الفرعية</p>
+    <p class="section-kicker">المجالات الفرعية <span class="section-kicker__en">Subfields</span></p>
     <h2>${category.ar}</h2>
     <span>${category.en}</span>
     <p>${category.descAr}</p>
@@ -261,6 +261,7 @@ function renderSubfields() {
             <span class="field-title">${title.ar}</span>
             <span class="field-title-en">${title.en}</span>
             <span class="field-scientist">${scientist.ar}</span>
+            <span class="field-scientist field-scientist-en">${scientist.en}</span>
           </span>
         </button>
       `;
@@ -268,7 +269,7 @@ function renderSubfields() {
     .join("");
 
   if (!fields.length) {
-    fieldList.innerHTML = `<div class="empty">لا توجد نتائج مطابقة.</div>`;
+    fieldList.innerHTML = `<div class="empty">لا توجد نتائج مطابقة.<span>No matching results.</span></div>`;
   }
 }
 
@@ -283,7 +284,7 @@ function introUrl(language = narratorLanguage) {
 function showAudioNotice() {
   const message =
     narratorLanguage === "ar"
-      ? "لم يتم العثور على الملف الصوتي لهذا الاختيار. شغّل: python scripts/gen_tts.py"
+      ? "لم يتم العثور على الملف الصوتي لهذا الاختيار. شغّل: python scripts/gen_tts.py / Audio is not generated for this selection yet."
       : "Audio is not generated for this selection yet. Run: python scripts/gen_tts.py";
   const notice = document.createElement("div");
   notice.className = "audio-notice";
@@ -349,7 +350,7 @@ function pauseOrResumeSpeech() {
 function renderDetail() {
   const field = data.fields.find((item) => item.id === activeField);
   if (!field) {
-    detailPanel.innerHTML = `<div class="empty">لا توجد نتائج مطابقة.</div>`;
+    detailPanel.innerHTML = `<div class="empty">لا توجد نتائج مطابقة.<span>No matching results.</span></div>`;
     return;
   }
 
@@ -362,13 +363,14 @@ function renderDetail() {
     <article class="science-detail">
       <header class="detail-hero">
         <div class="detail-copy">
-          <p class="section-kicker">المجال رقم ${String(field.sourceIndex).padStart(2, "0")} · ${category.en}</p>
+          <p class="section-kicker">المجال رقم ${String(field.sourceIndex).padStart(2, "0")} <span class="section-kicker__en">Field ${String(field.sourceIndex).padStart(2, "0")} · ${category.en}</span></p>
           <h2>${title.ar}</h2>
           <span class="detail-title-en">${title.en}</span>
           <div class="detail-meta">
             <span>${scientist.ar}</span>
             <span dir="ltr">${scientist.en}</span>
             <span>${category.ar}</span>
+            <span dir="ltr">${category.en}</span>
           </div>
         </div>
         <figure class="innovation-figure">
@@ -400,7 +402,7 @@ function renderDetail() {
                 </div>
                 <div class="columns">
                   <div class="text-panel ar-text">
-                    <h4>العَرَبِيَّةُ المُشَكَّلَةُ</h4>
+                    <h4>العَرَبِيَّةُ المُشَكَّلَةُ <small>Vocalized Arabic</small></h4>
                     <p>${section.ar}</p>
                   </div>
                   <div class="text-panel en-text" dir="ltr">
@@ -419,6 +421,8 @@ function renderDetail() {
 
 function setView(view) {
   currentView = view;
+  document.body.classList.remove("view-categories", "view-fields", "view-detail");
+  document.body.classList.add(`view-${view}`);
   heroScreen.hidden = view !== "categories";
   introBand.hidden = view !== "categories";
   categoryGrid.hidden = view !== "categories";
@@ -428,6 +432,12 @@ function setView(view) {
   viewToolbar.hidden = view === "categories";
   backButton.hidden = view === "categories";
   backButton.textContent = narratorMeta().back;
+}
+
+function resetScroll() {
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
 }
 
 function render() {
@@ -445,7 +455,7 @@ categoryGrid.addEventListener("click", (event) => {
   searchBox.value = "";
   renderSubfields();
   setView("fields");
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  resetScroll();
 });
 
 fieldList.addEventListener("click", (event) => {
@@ -454,7 +464,7 @@ fieldList.addEventListener("click", (event) => {
   activeField = button.dataset.field;
   renderDetail();
   setView("detail");
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  resetScroll();
 });
 
 detailPanel.addEventListener("click", (event) => {
@@ -482,11 +492,11 @@ backButton.addEventListener("click", () => {
   if (currentView === "detail") {
     renderSubfields();
     setView("fields");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    resetScroll();
     return;
   }
   setView("categories");
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  resetScroll();
 });
 
 searchBox.addEventListener("input", (event) => {

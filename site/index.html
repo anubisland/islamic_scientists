@@ -12,24 +12,24 @@
       <img class="hero__image" src="assets/hero-islamic-science.png" alt="" />
       <div class="hero__overlay"></div>
       <nav class="topbar" aria-label="Primary">
-        <strong>مَوْسُوعَةُ العُلَمَاءِ</strong>
+        <strong>مَوْسُوعَةُ العُلَمَاءِ <small>Scholars Encyclopedia</small></strong>
         <div class="topbar__actions">
           <div class="narrator-toggle" aria-label="Narrator language">
-            <button class="narrator-option" type="button" data-narrator-lang="ar" aria-pressed="true">نُطْقٌ عَرَبِيّ</button>
+            <button class="narrator-option" type="button" data-narrator-lang="ar" aria-pressed="true">نُطْقٌ عَرَبِيّ / Arabic</button>
             <button class="narrator-option" type="button" data-narrator-lang="en" aria-pressed="false">English Voice</button>
           </div>
           <div class="voice-pick">
-            <button class="voice-button" id="voiceButton" type="button" aria-haspopup="true" aria-expanded="false" title="اختيار صوت الراوي">
+            <button class="voice-button" id="voiceButton" type="button" aria-haspopup="true" aria-expanded="false" title="اختيار صوت الراوي / Choose narrator voice">
               <span>🎙</span><span id="voiceCurrent">عبدالله</span>
             </button>
             <div class="voice-menu" id="voiceMenu" role="menu" hidden></div>
           </div>
-          <button class="icon-button" id="stopNarration" type="button" title="Stop narration">■</button>
+          <button class="icon-button" id="stopNarration" type="button" title="إيقاف الصوت / Stop narration">■</button>
         </div>
       </nav>
       <section class="hero__content">
         <p class="eyebrow">Islamic Scientific Legacy</p>
-        <h1>عُلَمَاءُ المُسْلِمِينَ وَأَثَرُهُمْ فِي العِلْمِ الحَدِيثِ</h1>
+        <h1>عُلَمَاءُ المُسْلِمِينَ وَأَثَرُهُمْ فِي العِلْمِ الحَدِيثِ <span>Muslim Scholars and Their Impact on Modern Science</span></h1>
         <p class="hero__copy ar-text">
           مَشْرُوعٌ تَوْثِيقِيٌّ يُعِيدُ قِرَاءَةَ جُهُودِ عُلَمَاءِ الحَضَارَةِ الإِسْلَامِيَّةِ فِي الرِّيَاضِيَّاتِ، وَالطِّبِّ، وَالفَلَكِ، وَالهَنْدَسَةِ، وَالكِيمْيَاءِ، وَغَيْرِهَا، وَيَرْبِطُهَا بِمَا وَصَلَ إِلَيْهِ العَالَمُ مِنْ تَقَدُّمٍ تِكْنُولُوجِيٍّ.
         </p>
@@ -37,10 +37,10 @@
           A bilingual documentation project tracing how Muslim scholars advanced mathematics, medicine, astronomy, engineering, chemistry, and other sciences that helped shape modern technology.
         </p>
         <div class="hero__stats">
-          <span><b id="fieldCount">0</b> مجال</span>
-          <span><b id="scientistCount">0</b> عالم فريد</span>
-          <span>راوٍ صوتي</span>
-          <button class="intro-audio-button" id="startIntroAudio" type="button">استماع للمقدمة</button>
+          <span><b id="fieldCount">0</b> مجال <small>Fields</small></span>
+          <span><b id="scientistCount">0</b> عالم فريد <small>Unique scholars</small></span>
+          <span>راوٍ صوتي <small>Natural narrator</small></span>
+          <button class="intro-audio-button" id="startIntroAudio" type="button">استماع للمقدمة <small>Listen to intro</small></button>
         </div>
       </section>
     </header>
@@ -64,8 +64,8 @@
 
       <section class="controls" id="searchControls" aria-label="Search" hidden>
         <label class="search">
-          <span>بحث</span>
-          <input id="searchBox" type="search" placeholder="ابحث باسم عالم أو مجال..." />
+          <span>بحث <small>Search</small></span>
+          <input id="searchBox" type="search" placeholder="ابحث باسم عالم أو مجال... / Search by scholar or field..." />
         </label>
       </section>
 
